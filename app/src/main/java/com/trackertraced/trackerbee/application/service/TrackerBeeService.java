@@ -32,7 +32,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class TrackerBeeService extends Service implements HTTPResponseAsync,OnLocationUpdateListener {
+public class TrackerBeeService extends Service implements HTTPResponseAsync, OnLocationUpdateListener {
 
     // private String USER_ID = "mashru";
     private static String USER_ID;
@@ -68,12 +68,12 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync,OnLo
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(trackerBeeLocationManager == null){
+        if (trackerBeeLocationManager == null) {
             trackerBeeLocationManager = ApplicationConstants.getTrackerBeeLocationManager();
             trackerBeeLocationManager.setOnLocationUpdateListener(this);
         }
 
-        if(!trackerBeeLocationManager.isLocationManagerInitialized()){
+        if (!trackerBeeLocationManager.isLocationManagerInitialized()) {
             trackerBeeLocationManager.initLocationManager(ApplicationConstants.getContext());
         }
 
@@ -117,10 +117,8 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync,OnLo
         return jsonObject.toString();
     }
 
-    ArrayList<NameValuePair> getLogInstanceNameValuePair(Location cur_loc){
+    ArrayList<NameValuePair> getLogInstanceNameValuePair(Location cur_loc) {
         ArrayList<NameValuePair> data = new ArrayList<NameValuePair>();
-        //DeviceUuidFactory deviceUuidFactory = new DeviceUuidFactory(getBaseContext());
-//        data.add(new BasicNameValuePair("insID", deviceUuidFactory.getDeviceUuid().toString()));
         data.add(new BasicNameValuePair("insID", ApplicationSharePreferences.getDeviceId()));
         data.add(new BasicNameValuePair("latt", String.valueOf(cur_loc.getLatitude())));
         data.add(new BasicNameValuePair("lon", String.valueOf(cur_loc.getLongitude())));
@@ -129,9 +127,9 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync,OnLo
         return data;
     }
 
-    void broadcastLatestLocation(Location cur_loc){
+    void broadcastLatestLocation(Location cur_loc) {
         Intent intent = new Intent(ServiceBroadcastConstants.BROADCAST_LATEST_LOCATION);
-        intent.putExtra(ServiceBroadcastConstants.TAG_LATEST_LOCATION,cur_loc);
+        intent.putExtra(ServiceBroadcastConstants.TAG_LATEST_LOCATION, cur_loc);
         sendBroadcast(intent);
     }
 
