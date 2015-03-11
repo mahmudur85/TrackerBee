@@ -123,7 +123,7 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync, OnL
         data.add(new BasicNameValuePair("latt", String.valueOf(cur_loc.getLatitude())));
         data.add(new BasicNameValuePair("lon", String.valueOf(cur_loc.getLongitude())));
         data.add(new BasicNameValuePair("elv", String.valueOf(cur_loc.getAltitude())));
-        logHelper.d("data: " + data.toString());
+        logHelper.d("getLogInstanceNameValuePair() data: " + data.toString());
         return data;
     }
 

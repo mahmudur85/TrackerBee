@@ -4,19 +4,22 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.trackertraced.trackerbee.R;
 import com.trackertraced.trackerbee.application.broadcastreceiver.ServiceBroadcastConstants;
 import com.trackertraced.trackerbee.application.manager.ServiceMessengerManager;
@@ -27,21 +30,26 @@ import com.trackertraced.trackerbee.application.utils.ApplicationSharePreference
 import com.trackertraced.trackerbee.application.utils.DeviceUuidFactory;
 import com.trackertraced.trackerbee.application.utils.LogHelper;
 
-public class TrackerBeeMapsActivity extends FragmentActivity {
+import java.util.ArrayList;
+
+public class TrackerBeeMapsActivity extends FragmentActivity implements OnMapClickListener, OnMapLongClickListener {
 
     LogHelper logHelper = new LogHelper(LogHelper.LogTags.KMR, TrackerBeeMapsActivity.class.getSimpleName(), true);
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private UiSettings uiSettingsMap;
-
     private ServiceMessengerManager serviceMessengerManager = new ServiceMessengerManagerImpl();
 
     Intent intentTrackerBeeService;
 
 //    EditText editTextDeviceId;
-//    Button buttonStart;
 
-    boolean isStart = false;
+    //    Button buttonStart;
+
+    Marker marker;
+    private ArrayList<LatLng> arrayPoints = null;
+    Polyline polyline;
+    PolylineOptions polylineOptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +65,8 @@ public class TrackerBeeMapsActivity extends FragmentActivity {
 
         intentTrackerBeeService = new Intent(ApplicationConstants.getContext(), TrackerBeeService.class);
         startService(intentTrackerBeeService);
+
+        setUpMapIfNeeded();
 
 //        editTextDeviceId = (EditText) findViewById(R.id.device_id);
 //        buttonStart = (Button) findViewById(R.id.button_start);
@@ -82,7 +92,22 @@ public class TrackerBeeMapsActivity extends FragmentActivity {
 //        });
 //        logHelper.d("onCreate()");
 
-        setUpMapIfNeeded();
+//        // Instantiates a new Polyline object and adds points to define a rectangle
+//        PolylineOptions rectOptions = new PolylineOptions()
+//                .add(new LatLng(37.35, -122.0))
+//                .add(new LatLng(37.45, -122.0))  // North of the previous point, but at the same longitude
+//                .add(new LatLng(37.45, -122.2))  // Same latitude, and 30km to the west
+//                .add(new LatLng(37.35, -122.2))  // Same longitude, and 16km to the south
+//                .add(new LatLng(37.35, -122.0)); // Closes the polyline.
+
+        // latt=23.757907949065945, lon=90.36959020756449
+//        ArrayList<LatLng> latLngs = new ArrayList<>();
+//        latLngs.add(new LatLng(23.757907949065945,90.36959020756449));
+//        latLngs.add(new LatLng(23.857907949065945,90.36959020756449));
+//        latLngs.add(new LatLng(23.857907949065945,90.06959020756449));
+//        latLngs.add(new LatLng(23.757907949065945,90.06959020756449));
+//        latLngs.add(new LatLng(23.757907949065945,90.36959020756449));
+//        addPolyline(latLngs);
     }
 
     private final BroadcastReceiver latestLocationBroadCastReceiver = new BroadcastReceiver() {
@@ -90,7 +115,8 @@ public class TrackerBeeMapsActivity extends FragmentActivity {
         public void onReceive(Context context, Intent intent) {
             Location location = intent.getParcelableExtra(ServiceBroadcastConstants.TAG_LATEST_LOCATION);
 //            logHelper.d("BroadcastReceiver() location: " + location.toString());
-            setUpMap(new LatLng(location.getLatitude(), location.getLongitude()));
+            //addMarker(new LatLng(location.getLatitude(), location.getLongitude()));
+            addPolyline(new LatLng(location.getLatitude(), location.getLongitude()));
         }
     };
 
@@ -122,7 +148,7 @@ public class TrackerBeeMapsActivity extends FragmentActivity {
     /**
      * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
      * installed) and the map has not already been instantiated.. This will ensure that we only ever
-     * call {@link #setUpMap(LatLng latLng)} once when {@link #mMap} is not null.
+     * call {@link #addMarker(LatLng latLng)} once when {@link #mMap} is not null.
      * <p/>
      * If it isn't installed {@link SupportMapFragment} (and
      * {@link com.google.android.gms.maps.MapView MapView}) will show a prompt for the user to
@@ -140,12 +166,11 @@ public class TrackerBeeMapsActivity extends FragmentActivity {
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
-            // Check if we were successful in obtaining the map.
-            if (mMap != null) {
-                Location location = ApplicationSharePreferences.getLastKnownLocation();
-                setUpMap(new LatLng(location.getLatitude(), location.getLongitude()));
-            }
         }
+        arrayPoints = new ArrayList<LatLng>();
+        mMap.setMyLocationEnabled(true);
+        mMap.setOnMapClickListener(this);
+        mMap.setOnMapLongClickListener(this);
     }
 
     /**
@@ -154,11 +179,54 @@ public class TrackerBeeMapsActivity extends FragmentActivity {
      * <p/>
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
-    private void setUpMap(LatLng latLng) {
-        mMap.clear();
-        mMap.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
+    private void addMarker(LatLng latLng) {
+        removeMarker();
+        marker = mMap.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 5000, null);
+    }
+
+    private void removeMarker() {
+        if (null != marker) {
+            marker.remove();
+        }
+    }
+
+    private void addPolyline(ArrayList<LatLng> positionList) {
+        polylineOptions = new PolylineOptions();
+        polylineOptions.color(Color.RED);
+        polylineOptions.width(5);
+        polylineOptions.addAll(positionList);
+        polyline = mMap.addPolyline(polylineOptions);
+    }
+
+    private void addPolyline(LatLng position) {
+        arrayPoints.add(position);
+        addPolyline(arrayPoints);
+    }
+
+    private void removePolyline() {
+        if (null != polyline) {
+            polyline.remove();
+        }
+    }
+
+    private void clearMap() {
+        mMap.clear();
+        arrayPoints.clear();
+    }
+
+    @Override
+    public void onMapClick(LatLng point) {
+        //add marker
+        addMarker(point);
+        // setting polyline in the map
+        addPolyline(point);
+    }
+
+    @Override
+    public void onMapLongClick(LatLng point) {
+        clearMap();
     }
 
     //TODO:
