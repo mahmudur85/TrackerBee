@@ -26,6 +26,7 @@ import com.trackertraced.trackerbee.application.manager.ServiceMessengerManager;
 import com.trackertraced.trackerbee.application.manager.managerImpl.ServiceMessengerManagerImpl;
 import com.trackertraced.trackerbee.application.service.TrackerBeeService;
 import com.trackertraced.trackerbee.application.utils.ApplicationConstants;
+import com.trackertraced.trackerbee.application.utils.ApplicationHelper;
 import com.trackertraced.trackerbee.application.utils.ApplicationSharePreferences;
 import com.trackertraced.trackerbee.application.utils.DeviceUuidFactory;
 import com.trackertraced.trackerbee.application.utils.LogHelper;
@@ -65,6 +66,7 @@ public class TrackerBeeMapsActivity extends FragmentActivity implements OnMapCli
 
         intentTrackerBeeService = new Intent(ApplicationConstants.getContext(), TrackerBeeService.class);
         startService(intentTrackerBeeService);
+
 
         setUpMapIfNeeded();
 
@@ -108,6 +110,8 @@ public class TrackerBeeMapsActivity extends FragmentActivity implements OnMapCli
 //        latLngs.add(new LatLng(23.757907949065945,90.06959020756449));
 //        latLngs.add(new LatLng(23.757907949065945,90.36959020756449));
 //        addPolyline(latLngs);
+
+
     }
 
     private final BroadcastReceiver latestLocationBroadCastReceiver = new BroadcastReceiver() {
@@ -116,7 +120,9 @@ public class TrackerBeeMapsActivity extends FragmentActivity implements OnMapCli
             Location location = intent.getParcelableExtra(ServiceBroadcastConstants.TAG_LATEST_LOCATION);
 //            logHelper.d("BroadcastReceiver() location: " + location.toString());
             //addMarker(new LatLng(location.getLatitude(), location.getLongitude()));
-            addPolyline(new LatLng(location.getLatitude(), location.getLongitude()));
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            addPolyline(latLng);
+            moveToLocation(latLng);
         }
     };
 
@@ -168,9 +174,14 @@ public class TrackerBeeMapsActivity extends FragmentActivity implements OnMapCli
                     .getMap();
         }
         arrayPoints = new ArrayList<LatLng>();
-        mMap.setMyLocationEnabled(true);
-        mMap.setOnMapClickListener(this);
+        // mMap.setMyLocationEnabled(true);
+        // mMap.setOnMapClickListener(this);
         mMap.setOnMapLongClickListener(this);
+    }
+
+    private void moveToLocation(LatLng position) {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 5000, null);//
     }
 
     /**
@@ -182,8 +193,7 @@ public class TrackerBeeMapsActivity extends FragmentActivity implements OnMapCli
     private void addMarker(LatLng latLng) {
         removeMarker();
         marker = mMap.addMarker(new MarkerOptions().position(latLng).title("Current Location"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 5000, null);
+        moveToLocation(latLng);
     }
 
     private void removeMarker() {
