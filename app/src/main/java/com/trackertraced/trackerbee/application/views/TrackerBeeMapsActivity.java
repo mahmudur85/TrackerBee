@@ -28,6 +28,7 @@ import com.trackertraced.trackerbee.application.service.TrackerBeeService;
 import com.trackertraced.trackerbee.application.utils.ApplicationConstants;
 import com.trackertraced.trackerbee.application.utils.ApplicationHelper;
 import com.trackertraced.trackerbee.application.utils.ApplicationSharePreferences;
+import com.trackertraced.trackerbee.application.utils.ConstantsKeyValues;
 import com.trackertraced.trackerbee.application.utils.DeviceUuidFactory;
 import com.trackertraced.trackerbee.application.utils.LogHelper;
 
@@ -66,8 +67,6 @@ public class TrackerBeeMapsActivity extends FragmentActivity implements OnMapCli
 
         intentTrackerBeeService = new Intent(ApplicationConstants.getContext(), TrackerBeeService.class);
         startService(intentTrackerBeeService);
-
-
         setUpMapIfNeeded();
 
 //        editTextDeviceId = (EditText) findViewById(R.id.device_id);
@@ -237,6 +236,59 @@ public class TrackerBeeMapsActivity extends FragmentActivity implements OnMapCli
     @Override
     public void onMapLongClick(LatLng point) {
         clearMap();
+    }
+
+    /**
+     * Method for sending request message to {@link com.trackertraced.trackerbee.application.service.TrackerBeeService}
+     * to GPS Logs from server
+     *
+     * @param timeTo
+     * @param timeFrom
+     */
+    public void requestInstanceLog(String timeTo, String timeFrom) {
+        Bundle params = new Bundle();
+        params.putInt(
+                ConstantsKeyValues.ServerMessageConsttants.MessageTags.TAG_MESSAGE_TYPE,
+                ConstantsKeyValues.ServerMessageConsttants.MessageTypes.TYPE_MESSAGE_GET_INSTANCE
+        );
+        params.putString(
+                ConstantsKeyValues.ServerMessageConsttants.MessageTags.GetInstance.TAG_TIME_TO,
+                timeTo
+        );
+        params.putString(
+                ConstantsKeyValues.ServerMessageConsttants.MessageTags.GetInstance.TAG_TIME_FROM,
+                timeFrom
+        );
+        ApplicationConstants.getServiceMessengerManager().sendMessageToService(params);
+    }
+
+    /**
+     * Method for sending request message to {@link com.trackertraced.trackerbee.application.service.TrackerBeeService}
+     * to GPS Logs from server
+     *
+     * @param fromTime
+     */
+    public void requestInstanceLog(String fromTime) {
+        Bundle params = new Bundle();
+        params.putInt(
+                ConstantsKeyValues.ServerMessageConsttants.MessageTags.TAG_MESSAGE_TYPE,
+                ConstantsKeyValues.ServerMessageConsttants.MessageTypes.TYPE_MESSAGE_GET_INSTANCE
+        );
+        ApplicationConstants.getServiceMessengerManager().sendMessageToService(params);
+    }
+
+    /**
+     * Method for sending request message to {@link com.trackertraced.trackerbee.application.service.TrackerBeeService}
+     * to GPS Logs from server
+     *
+     * @param rows
+     */
+    public void requestInstanceLog(int rows) {
+        Bundle params = new Bundle();
+        params.putInt(
+                ConstantsKeyValues.ServerMessageConsttants.MessageTags.TAG_MESSAGE_TYPE,
+                ConstantsKeyValues.ServerMessageConsttants.MessageTypes.TYPE_MESSAGE_GET_INSTANCE
+        );
     }
 
     //TODO:

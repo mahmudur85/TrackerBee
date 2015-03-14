@@ -12,6 +12,7 @@ import android.os.Messenger;
 import com.trackertraced.trackerbee.application.broadcastreceiver.ServiceBroadcastConstants;
 import com.trackertraced.trackerbee.application.utils.ApplicationConstants;
 import com.trackertraced.trackerbee.application.utils.ApplicationSharePreferences;
+import com.trackertraced.trackerbee.application.utils.ConstantsKeyValues;
 import com.trackertraced.trackerbee.application.utils.DeviceUuidFactory;
 import com.trackertraced.trackerbee.application.utils.LogHelper;
 import com.trackertraced.trackerbee.application.utils.httpRequest.HTTPParams;
@@ -169,10 +170,12 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync, OnL
 
     @Override
     public void OnLocationUpdate(Location location) {
-//        logHelper.d(location);
-        ApplicationSharePreferences.setLastKnownLocation(location);
-        broadcastLatestLocation(location);
-        SendLocationToServer(location);
+        //logHelper.d(location);
+        if (location != null) {
+            ApplicationSharePreferences.setLastKnownLocation(location);
+            broadcastLatestLocation(location);
+            SendLocationToServer(location);
+        }
     }
 
     static class IncomingHandler extends Handler {
@@ -181,6 +184,16 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync, OnL
             LogHelper logHelperIncomingHandler = new LogHelper(LogHelper.LogTags.KMR, IncomingHandler.class.getSimpleName(), true);
 //            msg.
             Bundle data = msg.getData();
+            int messageType = data.getInt(
+                    ConstantsKeyValues.ServerMessageConsttants.MessageTags.TAG_MESSAGE_TYPE
+            );
+            switch (messageType) {
+                case ConstantsKeyValues.ServerMessageConsttants.MessageTypes.TYPE_MESSAGE_GET_INSTANCE:
+                    logHelperIncomingHandler.d("TAG_MESSAGE_TYPE: TYPE_MESSAGE_GET_INSTANCE");
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
