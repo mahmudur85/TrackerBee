@@ -34,15 +34,19 @@ import com.trackertraced.trackerbee.application.utils.LogHelper;
 
 import java.util.ArrayList;
 
-public class TrackerBeeMapsActivity extends FragmentActivity implements OnMapClickListener, OnMapLongClickListener {
+public class TrackerBeeMapsActivity
+        extends FragmentActivity
+        implements OnMapClickListener,
+        OnMapLongClickListener,
+        GoogleMap.OnMapLoadedCallback {
 
     LogHelper logHelper = new LogHelper(LogHelper.LogTags.KMR, TrackerBeeMapsActivity.class.getSimpleName(), true);
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private UiSettings uiSettingsMap;
-    private ServiceMessengerManager serviceMessengerManager = new ServiceMessengerManagerImpl();
+//    private ServiceMessengerManager serviceMessengerManager = new ServiceMessengerManagerImpl();
 
-    Intent intentTrackerBeeService;
+    //Intent intentTrackerBeeService;
 
 //    EditText editTextDeviceId;
 
@@ -65,8 +69,6 @@ public class TrackerBeeMapsActivity extends FragmentActivity implements OnMapCli
         DeviceUuidFactory deviceUuidFactory = new DeviceUuidFactory(getBaseContext());
         ApplicationSharePreferences.setDeviceId(deviceUuidFactory.getDeviceUuid().toString());
 
-        intentTrackerBeeService = new Intent(ApplicationConstants.getContext(), TrackerBeeService.class);
-        startService(intentTrackerBeeService);
         setUpMapIfNeeded();
 
 //        editTextDeviceId = (EditText) findViewById(R.id.device_id);
@@ -128,14 +130,25 @@ public class TrackerBeeMapsActivity extends FragmentActivity implements OnMapCli
     @Override
     protected void onPause() {
         super.onPause();
-        unbindService(serviceMessengerManager.getServiceConnection());
+        unbindService(
+                ApplicationConstants
+                        .getServiceMessengerManager()
+                        .getServiceConnection()
+        );
         unregisterReceiver(latestLocationBroadCastReceiver);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        bindService(intentTrackerBeeService, serviceMessengerManager.getServiceConnection(), Context.BIND_AUTO_CREATE);
+        Intent intentTrackerBeeService = new Intent(ApplicationConstants.getContext(), TrackerBeeService.class);
+        startService(intentTrackerBeeService);
+        bindService(intentTrackerBeeService,
+                ApplicationConstants
+                        .getServiceMessengerManager()
+                        .getServiceConnection(),
+                Context.BIND_AUTO_CREATE
+        );
         registerReceiver(latestLocationBroadCastReceiver, new IntentFilter(ServiceBroadcastConstants.BROADCAST_LATEST_LOCATION));
 //        if(ApplicationSharePreferences.getDeviceId()!=null){
 //            bindService(intentTrackerBeeService,serviceMessengerManager.getServiceConnection(), Context.BIND_AUTO_CREATE);
@@ -176,6 +189,7 @@ public class TrackerBeeMapsActivity extends FragmentActivity implements OnMapCli
         // mMap.setMyLocationEnabled(true);
         // mMap.setOnMapClickListener(this);
         mMap.setOnMapLongClickListener(this);
+        mMap.setOnMapLoadedCallback(this);
     }
 
     private void moveToLocation(LatLng position) {
@@ -249,7 +263,7 @@ public class TrackerBeeMapsActivity extends FragmentActivity implements OnMapCli
         Bundle params = new Bundle();
         params.putInt(
                 ConstantsKeyValues.ServerMessageConsttants.MessageTags.TAG_MESSAGE_TYPE,
-                ConstantsKeyValues.ServerMessageConsttants.MessageTypes.TYPE_MESSAGE_GET_INSTANCE
+                ConstantsKeyValues.ServerMessageConsttants.MessageTypes.TYPE_MESSAGE_GET_INSTANCE_BY_TIME_RANGE
         );
         params.putString(
                 ConstantsKeyValues.ServerMessageConsttants.MessageTags.GetInstance.TAG_TIME_TO,
@@ -266,13 +280,17 @@ public class TrackerBeeMapsActivity extends FragmentActivity implements OnMapCli
      * Method for sending request message to {@link com.trackertraced.trackerbee.application.service.TrackerBeeService}
      * to GPS Logs from server
      *
-     * @param fromTime
+     * @param timeFrom
      */
-    public void requestInstanceLog(String fromTime) {
+    public void requestInstanceLog(String timeFrom) {
         Bundle params = new Bundle();
         params.putInt(
                 ConstantsKeyValues.ServerMessageConsttants.MessageTags.TAG_MESSAGE_TYPE,
-                ConstantsKeyValues.ServerMessageConsttants.MessageTypes.TYPE_MESSAGE_GET_INSTANCE
+                ConstantsKeyValues.ServerMessageConsttants.MessageTypes.TYPE_MESSAGE_GET_INSTANCE_TIME_FROM
+        );
+        params.putString(
+                ConstantsKeyValues.ServerMessageConsttants.MessageTags.GetInstance.TAG_TIME_FROM,
+                timeFrom
         );
         ApplicationConstants.getServiceMessengerManager().sendMessageToService(params);
     }
@@ -287,7 +305,19 @@ public class TrackerBeeMapsActivity extends FragmentActivity implements OnMapCli
         Bundle params = new Bundle();
         params.putInt(
                 ConstantsKeyValues.ServerMessageConsttants.MessageTags.TAG_MESSAGE_TYPE,
-                ConstantsKeyValues.ServerMessageConsttants.MessageTypes.TYPE_MESSAGE_GET_INSTANCE
+                ConstantsKeyValues.ServerMessageConsttants.MessageTypes.TYPE_MESSAGE_GET_INSTANCE_BY_ROWS
+        );
+        params.putInt(
+                ConstantsKeyValues.ServerMessageConsttants.MessageTags.GetInstance.TAG_ROWS,
+                rows
+        );
+        ApplicationConstants.getServiceMessengerManager().sendMessageToService(params);
+    }
+
+    @Override
+    public void onMapLoaded() {
+        this.requestInstanceLog(
+                ApplicationHelper.getYesterdayDateString()
         );
     }
 

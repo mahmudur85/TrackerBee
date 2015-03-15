@@ -16,7 +16,9 @@ public final class ConstantsKeyValues {
         }
 
         public static final class MessageTypes {
-            public static final int TYPE_MESSAGE_GET_INSTANCE = 1;
+            public static final int TYPE_MESSAGE_GET_INSTANCE_BY_TIME_RANGE = 1;
+            public static final int TYPE_MESSAGE_GET_INSTANCE_TIME_FROM = 2;
+            public static final int TYPE_MESSAGE_GET_INSTANCE_BY_ROWS = 3;
         }
     }
 }

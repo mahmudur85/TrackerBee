@@ -3,6 +3,7 @@ package com.trackertraced.trackerbee.application.utils;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -173,10 +174,36 @@ public final class ApplicationHelper {
      *
      * @return currentDateTime - String
      */
-    public static String getCurrentTime() {
+    public static String getCurrentDateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_TIME_FORMAT);
         String currentDateTime = sdf.format(new Date());
-        logHelper.d("getCurrentTime: " + currentDateTime);
+        logHelper.d("getCurrentDateTime: " + currentDateTime);
         return currentDateTime;
+    }
+
+    /**
+     * Method to get Date from DateTime String
+     */
+    public static String getDateOnly(String dateTime) {
+        String date[] = dateTime.split(" ");
+        return date[0];
+    }
+
+    /**
+     * Method to get Yesterday Date
+     */
+    public static String getYesterdayDateString() {
+        DateFormat dateFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+        return getDateOnly(dateFormat.format(cal.getTime()));
+    }
+
+    public static boolean isEmptyOrNull(String value) {
+        if ((null == value) || ("" == value) || (value.length() == 0) || value.isEmpty()) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

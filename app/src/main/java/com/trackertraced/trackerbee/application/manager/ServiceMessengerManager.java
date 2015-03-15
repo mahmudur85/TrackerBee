@@ -10,5 +10,7 @@ import android.os.Messenger;
 public interface ServiceMessengerManager {
     public ServiceConnection getServiceConnection();
 
+    public boolean isBound();
+
     public void sendMessageToService(Bundle data);
 }

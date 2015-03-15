@@ -36,10 +36,6 @@ public class ApplicationConstants {
         return serviceMessengerManager;
     }
 
-    public static void setServiceMessengerManager(ServiceMessengerManager serviceMessengerManager) {
-        ApplicationConstants.serviceMessengerManager = serviceMessengerManager;
-    }
-
     public static TrackerBeeLocationManager getTrackerBeeLocationManager() {
         return trackerBeeLocationManager;
     }

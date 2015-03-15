@@ -11,6 +11,7 @@ import android.os.Messenger;
 
 import com.trackertraced.trackerbee.application.broadcastreceiver.ServiceBroadcastConstants;
 import com.trackertraced.trackerbee.application.utils.ApplicationConstants;
+import com.trackertraced.trackerbee.application.utils.ApplicationHelper;
 import com.trackertraced.trackerbee.application.utils.ApplicationSharePreferences;
 import com.trackertraced.trackerbee.application.utils.ConstantsKeyValues;
 import com.trackertraced.trackerbee.application.utils.DeviceUuidFactory;
@@ -87,7 +88,8 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync, OnL
         } catch (Exception e) {
             logHelper.e("scheduleAtFixedRate", e);
         }
-        return START_REDELIVER_INTENT;
+//        return START_REDELIVER_INTENT;
+        return START_STICKY;
     }
 
     Runnable locationPingRunnable = new Runnable() {
@@ -128,17 +130,53 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync, OnL
         return data;
     }
 
-    void broadcastLatestLocation(Location cur_loc) {
+    private void broadcastLatestLocation(Location cur_loc) {
         Intent intent = new Intent(ServiceBroadcastConstants.BROADCAST_LATEST_LOCATION);
         intent.putExtra(ServiceBroadcastConstants.TAG_LATEST_LOCATION, cur_loc);
         sendBroadcast(intent);
     }
 
-    public void SendLocationToServer(Location cur_loc) {
+    private void sendLocationToServer(Location cur_loc) {
         String[] path = {HTTPURLBuilder.API, HTTPURLBuilder.LOG_INSTANCE};
         String url = HTTPURLBuilder.getHTTPUlr(path);
         HTTPParams httpParams = new HTTPParams();
         httpParams.nameValuePairs = getLogInstanceNameValuePair(cur_loc);
+        mHTTPPostAsync = new HTTPPostAsync(url, httpParams, false);
+        mHTTPPostAsync.delegate = this;
+        mHTTPPostAsync.execute("");
+    }
+
+    ArrayList<NameValuePair> getGetInstanceNameValuePair(int rows, String timeTo, String timeFrom) {
+        ArrayList<NameValuePair> data = new ArrayList<NameValuePair>();
+        data.add(new BasicNameValuePair("insID", ApplicationSharePreferences.getDeviceId()));
+        if (rows > 0) {
+            data.add(new BasicNameValuePair("rows", String.valueOf(rows)));
+        }
+        if (ApplicationHelper.isEmptyOrNull(timeTo)) {
+            data.add(
+                    new BasicNameValuePair(
+                            "timeTo",
+                            timeTo
+                    )
+            );
+        }
+        if (ApplicationHelper.isEmptyOrNull(timeFrom)) {
+            data.add(
+                    new BasicNameValuePair(
+                            "timeFrom",
+                            timeFrom
+                    )
+            );
+        }
+        logHelper.d("getGetInstanceNameValuePair() data: " + data.toString());
+        return data;
+    }
+
+    private void requestGetInstance(int rows, String timeTo, String timeFrom) {
+        String[] path = {HTTPURLBuilder.API, HTTPURLBuilder.GET_INSTANCE};
+        String url = HTTPURLBuilder.getHTTPUlr(path);
+        HTTPParams httpParams = new HTTPParams();
+        httpParams.nameValuePairs = getGetInstanceNameValuePair(rows, timeTo, timeFrom);
         mHTTPPostAsync = new HTTPPostAsync(url, httpParams, false);
         mHTTPPostAsync.delegate = this;
         mHTTPPostAsync.execute("");
@@ -174,11 +212,11 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync, OnL
         if (location != null) {
             ApplicationSharePreferences.setLastKnownLocation(location);
             broadcastLatestLocation(location);
-            SendLocationToServer(location);
+            sendLocationToServer(location);
         }
     }
 
-    static class IncomingHandler extends Handler {
+    class IncomingHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             LogHelper logHelperIncomingHandler = new LogHelper(LogHelper.LogTags.KMR, IncomingHandler.class.getSimpleName(), true);
@@ -187,13 +225,28 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync, OnL
             int messageType = data.getInt(
                     ConstantsKeyValues.ServerMessageConsttants.MessageTags.TAG_MESSAGE_TYPE
             );
+            String timeTo = "";
+            String timeFrom = "";
+            int rows = 0;
             switch (messageType) {
-                case ConstantsKeyValues.ServerMessageConsttants.MessageTypes.TYPE_MESSAGE_GET_INSTANCE:
-                    logHelperIncomingHandler.d("TAG_MESSAGE_TYPE: TYPE_MESSAGE_GET_INSTANCE");
+                case ConstantsKeyValues.ServerMessageConsttants.MessageTypes.TYPE_MESSAGE_GET_INSTANCE_BY_TIME_RANGE:
+                    logHelperIncomingHandler.d("TAG_MESSAGE_TYPE: TYPE_MESSAGE_GET_INSTANCE_BY_TIME_RANGE");
+                    timeTo = data.getString(ConstantsKeyValues.ServerMessageConsttants.MessageTags.GetInstance.TAG_TIME_TO);
+                    timeFrom = data.getString(ConstantsKeyValues.ServerMessageConsttants.MessageTags.GetInstance.TAG_TIME_FROM);
+                    break;
+                case ConstantsKeyValues.ServerMessageConsttants.MessageTypes.TYPE_MESSAGE_GET_INSTANCE_TIME_FROM:
+                    logHelperIncomingHandler.d("TAG_MESSAGE_TYPE: TYPE_MESSAGE_GET_INSTANCE_TIME_FROM");
+                    timeFrom = data.getString(ConstantsKeyValues.ServerMessageConsttants.MessageTags.GetInstance.TAG_TIME_FROM);
+                    break;
+                case ConstantsKeyValues.ServerMessageConsttants.MessageTypes.TYPE_MESSAGE_GET_INSTANCE_BY_ROWS:
+                    logHelperIncomingHandler.d("TAG_MESSAGE_TYPE: TYPE_MESSAGE_GET_INSTANCE_BY_ROWS");
+                    rows = data.getInt(ConstantsKeyValues.ServerMessageConsttants.MessageTags.GetInstance.TAG_ROWS);
                     break;
                 default:
                     break;
             }
+            logHelperIncomingHandler.d("rows: " + rows + ", timeTo: " + timeTo + ", timeFrom: " + timeFrom);
+            requestGetInstance(rows, timeTo, timeFrom);
         }
     }
 

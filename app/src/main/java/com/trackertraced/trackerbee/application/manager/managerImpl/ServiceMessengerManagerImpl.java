@@ -16,6 +16,7 @@ import com.trackertraced.trackerbee.application.utils.LogHelper;
  * Created by Mahmudur on 2/25/2015.
  */
 public class ServiceMessengerManagerImpl implements ServiceMessengerManager {
+    LogHelper logHelper = new LogHelper(LogHelper.LogTags.KMR, ServiceMessengerManagerImpl.class.getSimpleName(), false);
     Messenger serviceMessenger;
     boolean isBound;
     ServiceConnection serviceConnection;
@@ -34,16 +35,24 @@ public class ServiceMessengerManagerImpl implements ServiceMessengerManager {
                 isBound = false;
             }
         };
+        logHelper.d("serviceConnection: " + serviceConnection);
     }
 
+    @Override
     public ServiceConnection getServiceConnection() {
         return serviceConnection;
     }
 
+    @Override
+    public boolean isBound() {
+        return isBound;
+    }
+
+    @Override
     public void sendMessageToService(Bundle data) {
-        LogHelper logHelper = new LogHelper(LogHelper.LogTags.KMR, ServiceMessengerManagerImpl.class.getSimpleName(), true);
         Message msg = Message.obtain();
         msg.setData(data);
+        logHelper.d("serviceMessenger: " + serviceMessenger);
         try {
             serviceMessenger.send(msg);
         } catch (RemoteException e) {
