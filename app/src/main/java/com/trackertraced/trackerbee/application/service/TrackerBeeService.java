@@ -23,6 +23,7 @@ import com.trackertraced.trackerbee.application.utils.httpRequest.HTTPResponseCo
 import com.trackertraced.trackerbee.application.utils.httpRequest.HTTPURLBuilder;
 import com.trackertraced.trackerbee.locationmodule.manager.OnLocationUpdateListener;
 import com.trackertraced.trackerbee.locationmodule.manager.TrackerBeeLocationManager;
+import com.trackertraced.trackerbee.locationmodule.model.LocationModel;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -133,7 +134,13 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync, OnL
     private void broadcastLatestLocation(Location cur_loc) {
         Intent intent = new Intent(ServiceBroadcastConstants.BROADCAST_LATEST_LOCATION);
         intent.putExtra(ServiceBroadcastConstants.TAG_LATEST_LOCATION, cur_loc);
-        sendBroadcast(intent);
+        sendStickyBroadcast(intent);
+    }
+
+    private void broadcastLocationList(ArrayList<LocationModel> locationModels) {
+        Intent intent = new Intent(ServiceBroadcastConstants.BROADCAST_LOCATION_LIST);
+        intent.putParcelableArrayListExtra(ServiceBroadcastConstants.TAG_LOCATION_LIST, locationModels);
+        sendStickyBroadcast(intent);
     }
 
     private void sendLocationToServer(Location cur_loc) {

@@ -186,7 +186,7 @@ public class TrackerBeeMapsActivity
                     .getMap();
         }
         arrayPoints = new ArrayList<LatLng>();
-        // mMap.setMyLocationEnabled(true);
+        mMap.setMyLocationEnabled(true);
         // mMap.setOnMapClickListener(this);
         mMap.setOnMapLongClickListener(this);
         mMap.setOnMapLoadedCallback(this);
