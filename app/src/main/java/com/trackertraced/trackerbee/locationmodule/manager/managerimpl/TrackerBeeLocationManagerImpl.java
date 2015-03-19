@@ -53,16 +53,16 @@ public class TrackerBeeLocationManagerImpl implements TrackerBeeLocationManager 
     @Override
     public void initLocationManager(Context context){
         try{
-            logHelper.d("initLocationManager() context: " + context);
+//            logHelper.d("initLocationManager() context: " + context);
             this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
             this.trackerBeeLocationListener = new TrackerBeeLocationListener();
 
             Criteria criteria = new Criteria();
             String provider = this.locationManager.getBestProvider(criteria, false);
-//            try {
-//                Thread.sleep(1000);
-//            } catch (Exception ex) {
-//            }
+            try {
+                Thread.sleep(1000);
+            } catch (Exception ex) {
+            }
             Location location = this.locationManager.getLastKnownLocation(provider);
             this.locationManager.requestLocationUpdates(provider,
                     (UPDATE_INTERVAL_MILLISECONDS * 600),

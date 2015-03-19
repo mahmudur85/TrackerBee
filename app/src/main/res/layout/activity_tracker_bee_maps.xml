@@ -32,12 +32,23 @@
             android:text="Start" />
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/tv_device_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="Device Id"
+        android:layout_above="@+id/map" />
+
+
     <fragment
         android:id="@+id/map"
         android:layout_below="@+id/action_container"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
         tools:context="com.trackertraced.trackerbee.application.views.TrackerBeeMapsActivity" />
 </RelativeLayout>
 

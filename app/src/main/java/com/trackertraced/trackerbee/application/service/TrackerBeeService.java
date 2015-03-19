@@ -70,6 +70,7 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync, OnL
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        logHelper.d("onStartCommand: " + intent);
         if (trackerBeeLocationManager == null) {
             trackerBeeLocationManager = ApplicationConstants.getTrackerBeeLocationManager();
             trackerBeeLocationManager.setOnLocationUpdateListener(this);
@@ -126,20 +127,20 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync, OnL
         data.add(new BasicNameValuePair("latt", String.valueOf(cur_loc.getLatitude())));
         data.add(new BasicNameValuePair("lon", String.valueOf(cur_loc.getLongitude())));
         data.add(new BasicNameValuePair("elv", String.valueOf(cur_loc.getAltitude())));
-        logHelper.d("getLogInstanceNameValuePair() data: " + data.toString());
+//        logHelper.d("getLogInstanceNameValuePair() data: " + data.toString());
         return data;
     }
 
     private void broadcastLatestLocation(Location cur_loc) {
         Intent intent = new Intent(ServiceBroadcastConstants.BROADCAST_LATEST_LOCATION);
         intent.putExtra(ServiceBroadcastConstants.TAG_LATEST_LOCATION, cur_loc);
-        sendStickyBroadcast(intent);
+        sendBroadcast(intent);
     }
 
     private void broadcastLocationList(ArrayList<LocationModel> locationModels) {
         Intent intent = new Intent(ServiceBroadcastConstants.BROADCAST_LOCATION_LIST);
         intent.putParcelableArrayListExtra(ServiceBroadcastConstants.TAG_LOCATION_LIST, locationModels);
-        sendStickyBroadcast(intent);
+        sendBroadcast(intent);
     }
 
     private void sendLocationToServer(Location cur_loc) {
@@ -208,7 +209,7 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync, OnL
 
     @Override
     public void HTTPResponse(String response, HTTPResponseCode.ResponseCode responseCode) {
-        logHelper.d("response: " + response);
+//        logHelper.d("response: " + response);
         HTTPResponseParser httpResponseParser = new HTTPResponseParser(response);
         HTTPResponseParser.RESPONSE_TYPE response_type = httpResponseParser.getResponseType();
         logHelper.d("response_type: " + response_type.getString());
@@ -216,7 +217,7 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync, OnL
             case SUCCESS:
                 ArrayList<LocationModel> locationModels = httpResponseParser.getLocationModels();
                 broadcastLocationList(locationModels);
-                logHelper.d("locationModels: " + locationModels);
+                //logHelper.d("locationModels: " + locationModels);
                 break;
             case ERROR:
             case NOT_JSON:
@@ -232,7 +233,7 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync, OnL
         //logHelper.d(location);
         if (location != null) {
 //            ApplicationSharePreferences.setLastKnownLocation(location);
-            broadcastLatestLocation(location);
+//            broadcastLatestLocation(location);
             sendLocationToServer(location);
         }
     }

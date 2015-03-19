@@ -8,11 +8,13 @@ import android.graphics.Color;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -40,9 +42,9 @@ public class TrackerBeeMapsActivity
         implements OnMapClickListener,
         OnMapLongClickListener,
         GoogleMap.OnMapLoadedCallback {
-
+    // http://internet.com/mobile/developing-with-google-maps-v2-for-android/
     LogHelper logHelper = new LogHelper(LogHelper.LogTags.KMR, TrackerBeeMapsActivity.class.getSimpleName(), true);
-
+    TextView textViewDeviceId;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private UiSettings uiSettingsMap;
 //    private ServiceMessengerManager serviceMessengerManager = new ServiceMessengerManagerImpl();
@@ -69,7 +71,8 @@ public class TrackerBeeMapsActivity
 
         DeviceUuidFactory deviceUuidFactory = new DeviceUuidFactory(getBaseContext());
         ApplicationSharePreferences.setDeviceId(deviceUuidFactory.getDeviceUuid().toString());
-
+        textViewDeviceId = (TextView) findViewById(R.id.tv_device_id);
+        textViewDeviceId.setText(deviceUuidFactory.getDeviceUuid().toString());
         setUpMapIfNeeded();
 
 //        editTextDeviceId = (EditText) findViewById(R.id.device_id);
@@ -95,25 +98,6 @@ public class TrackerBeeMapsActivity
 //            }
 //        });
 //        logHelper.d("onCreate()");
-
-//        // Instantiates a new Polyline object and adds points to define a rectangle
-//        PolylineOptions rectOptions = new PolylineOptions()
-//                .add(new LatLng(37.35, -122.0))
-//                .add(new LatLng(37.45, -122.0))  // North of the previous point, but at the same longitude
-//                .add(new LatLng(37.45, -122.2))  // Same latitude, and 30km to the west
-//                .add(new LatLng(37.35, -122.2))  // Same longitude, and 16km to the south
-//                .add(new LatLng(37.35, -122.0)); // Closes the polyline.
-
-        // latt=23.757907949065945, lon=90.36959020756449
-//        ArrayList<LatLng> latLngs = new ArrayList<>();
-//        latLngs.add(new LatLng(23.757907949065945,90.36959020756449));
-//        latLngs.add(new LatLng(23.857907949065945,90.36959020756449));
-//        latLngs.add(new LatLng(23.857907949065945,90.06959020756449));
-//        latLngs.add(new LatLng(23.757907949065945,90.06959020756449));
-//        latLngs.add(new LatLng(23.757907949065945,90.36959020756449));
-//        addPolyline(latLngs);
-
-
     }
 
     private final BroadcastReceiver latestLocationBroadCastReceiver = new BroadcastReceiver() {
@@ -131,16 +115,18 @@ public class TrackerBeeMapsActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             ArrayList<LocationModel> locationModels = intent.getParcelableArrayListExtra(ServiceBroadcastConstants.TAG_LOCATION_LIST);
-            logHelper.d("BroadcastReceiver() location: " + locationModels);
+            logHelper.d("location: " + locationModels);
             //addMarker(new LatLng(location.getLatitude(), location.getLongitude()));
+            removePolyline();
+            clearMap();
             for (LocationModel locationModel : locationModels) {
                 LatLng latLng = new LatLng(
                         locationModel.getLocation().getLatitude(),
                         locationModel.getLocation().getLongitude()
                 );
                 addPolyline(latLng);
+                moveToLocation(latLng);
             }
-//            moveToLocation(latLng);
         }
     };
 
@@ -152,9 +138,8 @@ public class TrackerBeeMapsActivity
                         .getServiceMessengerManager()
                         .getServiceConnection()
         );
-        unregisterReceiver(latestLocationBroadCastReceiver);
+//        unregisterReceiver(latestLocationBroadCastReceiver);
         unregisterReceiver(locationListBroadCastReceiver);
-        firstLoad = false;
     }
 
     @Override
@@ -168,7 +153,7 @@ public class TrackerBeeMapsActivity
                         .getServiceConnection(),
                 Context.BIND_AUTO_CREATE
         );
-        registerReceiver(latestLocationBroadCastReceiver, new IntentFilter(ServiceBroadcastConstants.BROADCAST_LATEST_LOCATION));
+//        registerReceiver(latestLocationBroadCastReceiver, new IntentFilter(ServiceBroadcastConstants.BROADCAST_LATEST_LOCATION));
         registerReceiver(locationListBroadCastReceiver, new IntentFilter(ServiceBroadcastConstants.BROADCAST_LOCATION_LIST));
 //        if(ApplicationSharePreferences.getDeviceId()!=null){
 //            bindService(intentTrackerBeeService,serviceMessengerManager.getServiceConnection(), Context.BIND_AUTO_CREATE);
@@ -181,6 +166,7 @@ public class TrackerBeeMapsActivity
     @Override
     public void onDestroy() {
         super.onDestroy();
+        firstLoad = false;
     }
 
     /**
@@ -213,8 +199,13 @@ public class TrackerBeeMapsActivity
     }
 
     private void moveToLocation(LatLng position) {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 5000, null);//
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(position)
+                .zoom(15)                   // Sets the zoom
+                .build();    // Creates a CameraPosition from the builder
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+//        mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 5000, null);//
     }
 
     /**
