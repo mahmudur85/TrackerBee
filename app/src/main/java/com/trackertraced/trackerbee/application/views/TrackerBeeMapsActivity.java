@@ -51,7 +51,7 @@ public class TrackerBeeMapsActivity
 
 //    EditText editTextDeviceId;
 
-    //    Button buttonStart;
+    boolean firstLoad;
 
     Marker marker;
     private ArrayList<LatLng> arrayPoints = null;
@@ -123,7 +123,7 @@ public class TrackerBeeMapsActivity
 //            logHelper.d("BroadcastReceiver() location: " + location.toString());
             //addMarker(new LatLng(location.getLatitude(), location.getLongitude()));
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            addPolyline(latLng);
+//            addPolyline(latLng);
             moveToLocation(latLng);
         }
     };
@@ -131,7 +131,7 @@ public class TrackerBeeMapsActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             ArrayList<LocationModel> locationModels = intent.getParcelableArrayListExtra(ServiceBroadcastConstants.TAG_LOCATION_LIST);
-//            logHelper.d("BroadcastReceiver() location: " + location.toString());
+            logHelper.d("BroadcastReceiver() location: " + locationModels);
             //addMarker(new LatLng(location.getLatitude(), location.getLongitude()));
             for (LocationModel locationModel : locationModels) {
                 LatLng latLng = new LatLng(
@@ -154,6 +154,7 @@ public class TrackerBeeMapsActivity
         );
         unregisterReceiver(latestLocationBroadCastReceiver);
         unregisterReceiver(locationListBroadCastReceiver);
+        firstLoad = false;
     }
 
     @Override
@@ -335,9 +336,12 @@ public class TrackerBeeMapsActivity
 
     @Override
     public void onMapLoaded() {
-        this.requestInstanceLog(
-                ApplicationHelper.getYesterdayDateString()
-        );
+        if (!firstLoad) {
+            firstLoad = true;
+            this.requestInstanceLog(
+                    ApplicationHelper.getYesterdayDateString()
+            );
+        }
     }
 
     //TODO:

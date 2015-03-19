@@ -52,8 +52,6 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync, OnL
         USER_ID = uSER_ID;
     }
 
-    private static final String TAG = "TrackerBeeService";
-
     private TrackerBeeLocationManager trackerBeeLocationManager;
 
     private ScheduledExecutorService locationScheduledTaskExecutor;
@@ -78,7 +76,7 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync, OnL
         }
 
         if (!trackerBeeLocationManager.isLocationManagerInitialized()) {
-            trackerBeeLocationManager.initLocationManager(ApplicationConstants.getContext());
+            trackerBeeLocationManager.initLocationManager(getBaseContext());
         }
 
         if (locationScheduledTaskExecutor == null) {
@@ -90,8 +88,8 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync, OnL
         } catch (Exception e) {
             logHelper.e("scheduleAtFixedRate", e);
         }
-//        return START_REDELIVER_INTENT;
-        return START_STICKY;
+        return START_REDELIVER_INTENT;
+//        return START_STICKY;
     }
 
     Runnable locationPingRunnable = new Runnable() {
@@ -100,7 +98,7 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync, OnL
         public void run() {
             // TODO Auto-generated method stub
             try {
-                trackerBeeLocationManager.getLatestLocation(ApplicationConstants.getContext());
+                trackerBeeLocationManager.getLatestLocation(getBaseContext());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -233,7 +231,7 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync, OnL
     public void OnLocationUpdate(Location location) {
         //logHelper.d(location);
         if (location != null) {
-            ApplicationSharePreferences.setLastKnownLocation(location);
+//            ApplicationSharePreferences.setLastKnownLocation(location);
             broadcastLatestLocation(location);
             sendLocationToServer(location);
         }

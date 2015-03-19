@@ -66,8 +66,6 @@ public class LocationModel implements Parcelable {
     public static final Parcelable.Creator<LocationModel> CREATOR = new Creator<LocationModel>() {
         @Override
         public LocationModel createFromParcel(Parcel source) {
-            Bundle bundle = source.readBundle();
-            // instantiate a person using values from the bundle
             return new LocationModel(source);
         }
 

@@ -24,12 +24,13 @@ public class TrackerBeeLocationManagerImpl implements TrackerBeeLocationManager 
     private Location previousBestLocation = null;
     private OnLocationUpdateListener onLocationUpdateListener = null;
     private boolean isLocationManagerInitialized = false;
-    private float minimumDistance = 20.0f;
+    private float minimumDistance = 50.0f;
 
     public TrackerBeeLocationManagerImpl(){
         isLocationManagerInitialized = false;
     }
 
+    @Override
     public boolean isLocationManagerInitialized() {
         return isLocationManagerInitialized;
     }
@@ -38,37 +39,41 @@ public class TrackerBeeLocationManagerImpl implements TrackerBeeLocationManager 
         this.isLocationManagerInitialized = isLocationManagerInitialized;
     }
 
+    @Override
     public void setOnLocationUpdateListener(OnLocationUpdateListener onLocationUpdateListener) {
         this.onLocationUpdateListener = onLocationUpdateListener;
     }
 
+    @Override
     public void stopLocationUpdate(){
         this.locationManager.removeUpdates(trackerBeeLocationListener);
         setLocationManagerInitialized(false);
     }
 
+    @Override
     public void initLocationManager(Context context){
         try{
+            logHelper.d("initLocationManager() context: " + context);
             this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
             this.trackerBeeLocationListener = new TrackerBeeLocationListener();
 
             Criteria criteria = new Criteria();
             String provider = this.locationManager.getBestProvider(criteria, false);
-            try {
-                Thread.sleep(1000);
-            } catch (Exception ex) {
-            }
+//            try {
+//                Thread.sleep(1000);
+//            } catch (Exception ex) {
+//            }
             Location location = this.locationManager.getLastKnownLocation(provider);
-            if(onLocationUpdateListener != null){
-                onLocationUpdateListener.OnLocationUpdate(location);
-            }
             this.locationManager.requestLocationUpdates(provider,
                     (UPDATE_INTERVAL_MILLISECONDS * 600),
                     UPDATE_INTERVAL_MINIMUM_DISTANCE, this.trackerBeeLocationListener);
-            setLocationManagerInitialized(true);
+            this.setLocationManagerInitialized(true);
+            if(onLocationUpdateListener != null){
+                onLocationUpdateListener.OnLocationUpdate(location);
+            }
         }catch(Exception e){
-            logHelper.e("initLocationManager",e);
-            setLocationManagerInitialized(false);
+            this.setLocationManagerInitialized(false);
+            logHelper.e("initLocationManager", e);
         }
     }
 
@@ -81,6 +86,7 @@ public class TrackerBeeLocationManagerImpl implements TrackerBeeLocationManager 
      * @param context
      * @return latest location set or null if none
      */
+    @Override
     public boolean getLatestLocation(Context context) {
         LocationManager manager = (LocationManager) context
                 .getSystemService(Context.LOCATION_SERVICE);
