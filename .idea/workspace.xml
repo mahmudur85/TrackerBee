@@ -29,10 +29,9 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="app: com.trackertraced.trackerbee" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b7d11982-4727-4f08-9103-b93a8813fcaa" name="Default" comment="getInstance is working">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/locationmodule/model/LocationModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/broadcastreceiver/ServiceBroadcastConstants.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/broadcastreceiver/ServiceBroadcastConstants.java" />
+    <list default="true" id="b7d11982-4727-4f08-9103-b93a8813fcaa" name="Default" comment="LocationModel S">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/utils/HTTPResponseParser.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/utils/ApplicationHelper.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/utils/ApplicationHelper.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/views/TrackerBeeMapsActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/views/TrackerBeeMapsActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/service/TrackerBeeService.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/service/TrackerBeeService.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
@@ -58,22 +57,54 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="TrackerBeeService.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="TrackerBeeService.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/service/TrackerBeeService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.48392856" vertical-offset="1446" max-vertical-offset="3825">
-              <caret line="142" column="36" selection-start-line="142" selection-start-column="36" selection-end-line="142" selection-end-column="36" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="2924" max-vertical-offset="4080">
+              <caret line="219" column="54" selection-start-line="219" selection-start-column="54" selection-end-line="219" selection-end-column="54" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ServiceBroadcastConstants.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/broadcastreceiver/ServiceBroadcastConstants.java">
+      <file leaf-file-name="TrackerBeeLocationManagerImpl.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/locationmodule/manager/managerimpl/TrackerBeeLocationManagerImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="306">
-              <caret line="9" column="69" selection-start-line="9" selection-start-column="69" selection-end-line="9" selection-end-column="69" />
+            <state vertical-scroll-proportion="0.33333334" vertical-offset="538" max-vertical-offset="3757">
+              <caret line="51" column="0" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HTTPResponseParser.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/utils/HTTPResponseParser.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="715" max-vertical-offset="2244">
+              <caret line="61" column="36" selection-start-line="61" selection-start-column="36" selection-end-line="61" selection-end-column="36" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#1005#1006#0" expanded="true" />
+                <element signature="e#1042#1043#0" expanded="true" />
+                <element signature="e#1081#1082#0" expanded="true" />
+                <element signature="e#1119#1120#0" expanded="true" />
+                <element signature="e#1177#1178#0" expanded="true" />
+                <element signature="e#1221#1222#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ApplicationHelper.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/utils/ApplicationHelper.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5967">
+              <caret line="23" column="116" selection-start-line="23" selection-start-column="116" selection-end-line="23" selection-end-column="116" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#11649#11650#0" expanded="true" />
+                <element signature="e#11689#11690#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -81,9 +112,14 @@
       <file leaf-file-name="TrackerBeeMapsActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/views/TrackerBeeMapsActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2079" max-vertical-offset="5151">
-              <caret line="188" column="40" selection-start-line="188" selection-start-column="40" selection-end-line="188" selection-end-column="40" />
-              <folding />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1969" max-vertical-offset="5508">
+              <caret line="155" column="56" selection-start-line="155" selection-start-column="56" selection-end-line="155" selection-end-column="56" />
+              <folding>
+                <element signature="e#5839#6395#0" expanded="true" />
+                <element signature="e#6388#6389#0" expanded="true" />
+                <element signature="e#6465#7241#0" expanded="true" />
+                <element signature="e#7234#7235#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -1357,12 +1393,15 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/utils/ApplicationConstants.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/manager/ServiceMessengerManager.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/manager/managerImpl/ServiceMessengerManagerImpl.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/utils/ApplicationHelper.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/views/TrackerBeeMapsActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/locationmodule/model/LocationModel.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/broadcastreceiver/ServiceBroadcastConstants.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/service/TrackerBeeService.java" />
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/utils/JSONParser.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/utils/DatabaseFieldConstants.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/utils/ApplicationHelper.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/utils/HTTPResponseParser.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/views/TrackerBeeMapsActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/service/TrackerBeeService.java" />
       </list>
     </option>
   </component>
@@ -1459,14 +1498,6 @@
               <option name="myItemId" value="trackerbee" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="locationmodule" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="model" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -1486,11 +1517,7 @@
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="locationmodule" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="manager" />
+              <option name="myItemId" value="application" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1513,6 +1540,10 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="utils" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1572,6 +1603,9 @@
     <property name="options.searchVisible" value="true" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Mahmudur\AndroidStudioProjects\TrackerBee\app\src\main\java\com\trackertraced\trackerbee\application\utils" />
+    </key>
     <key name="android.template.packageName">
       <recent name="com.trackertraced.trackerbee.application.broadcastreceiver" />
       <recent name="com.trackertraced.trackerbee" />
@@ -1781,7 +1815,11 @@
       <created>1426444302005</created>
       <updated>1426444302005</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="LocationModel S">
+      <created>1426602068946</created>
+      <updated>1426602068946</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1792,13 +1830,15 @@
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32993197" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3282313" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5085034" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.6938776" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5085034" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.40136054" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24962178" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5085034" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32993197" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.40136054" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1814,8 +1854,6 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32980332" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3282313" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32993197" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -1872,43 +1910,14 @@
     <MESSAGE value="Plotting working" />
     <MESSAGE value="Time Conversion Server To Local and Local To Server is working" />
     <MESSAGE value="getInstance is working" />
-    <option name="LAST_COMMIT_MESSAGE" value="getInstance is working" />
+    <MESSAGE value="LocationModel S" />
+    <option name="LAST_COMMIT_MESSAGE" value="LocationModel S" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/views/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1615" max-vertical-offset="2040">
-          <caret line="95" column="5" selection-start-line="95" selection-start-column="5" selection-end-line="101" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="510" max-vertical-offset="1258">
-          <caret line="40" column="45" selection-start-line="40" selection-start-column="45" selection-end-line="40" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/service/TrackerBeeService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="728" max-vertical-offset="7548">
-          <caret line="160" column="35" selection-start-line="160" selection-start-column="35" selection-end-line="160" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/utils/httpRequest/HTTPParams.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="187" max-vertical-offset="697">
-          <caret line="11" column="34" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="119" max-vertical-offset="544">
@@ -2137,13 +2146,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/locationmodule/manager/managerimpl/TrackerBeeLocationManagerImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.175" vertical-offset="548" max-vertical-offset="3757">
-          <caret line="51" column="0" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/utils/ApplicationSharePreferences.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33333334" vertical-offset="21" max-vertical-offset="1088">
@@ -2179,8 +2181,8 @@
         <state vertical-scroll-proportion="0.7589286" vertical-offset="34" max-vertical-offset="731">
           <caret line="36" column="5" selection-start-line="36" selection-start-column="5" selection-end-line="36" selection-end-column="5" />
           <folding>
-            <element signature="e#1158#1159#0" expanded="true" />
-            <element signature="e#1212#1213#0" expanded="true" />
+            <element signature="e#1158#1159#0" expanded="false" />
+            <element signature="e#1212#1213#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2199,26 +2201,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/utils/ApplicationHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2959" max-vertical-offset="3570">
-          <caret line="201" column="39" selection-start-line="201" selection-start-column="26" selection-end-line="201" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/utils/CircularArrayList.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="867" max-vertical-offset="1598">
           <caret line="59" column="35" selection-start-line="59" selection-start-column="35" selection-end-line="59" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/views/TrackerBeeMapsActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2079" max-vertical-offset="5151">
-          <caret line="188" column="40" selection-start-line="188" selection-start-column="40" selection-end-line="188" selection-end-column="40" />
           <folding />
         </state>
       </provider>
@@ -2228,28 +2214,20 @@
         <state vertical-scroll-proportion="2.797075" vertical-offset="0" max-vertical-offset="1972">
           <caret line="90" column="37" selection-start-line="90" selection-start-column="37" selection-end-line="90" selection-end-column="37" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#488#489#0" expanded="true" />
-            <element signature="e#519#520#0" expanded="true" />
-            <element signature="e#569#570#0" expanded="true" />
-            <element signature="e#609#610#0" expanded="true" />
-            <element signature="e#643#644#0" expanded="true" />
-            <element signature="e#675#676#0" expanded="true" />
-            <element signature="e#723#724#0" expanded="true" />
-            <element signature="e#765#766#0" expanded="true" />
-            <element signature="e#1448#1449#0" expanded="true" />
-            <element signature="e#1472#1473#0" expanded="true" />
-            <element signature="e#2151#2152#0" expanded="true" />
-            <element signature="e#2205#2206#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#488#489#0" expanded="false" />
+            <element signature="e#519#520#0" expanded="false" />
+            <element signature="e#569#570#0" expanded="false" />
+            <element signature="e#609#610#0" expanded="false" />
+            <element signature="e#643#644#0" expanded="false" />
+            <element signature="e#675#676#0" expanded="false" />
+            <element signature="e#488#489#0" expanded="false" />
+            <element signature="e#519#520#0" expanded="false" />
+            <element signature="e#723#724#0" expanded="false" />
+            <element signature="e#765#766#0" expanded="false" />
+            <element signature="e#2166#2167#0" expanded="false" />
+            <element signature="e#2220#2221#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/broadcastreceiver/ServiceBroadcastConstants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="306">
-          <caret line="9" column="69" selection-start-line="9" selection-start-column="69" selection-end-line="9" selection-end-column="69" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2261,10 +2239,91 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Android/sdk/sources/android-21/java/lang/String.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6964286" vertical-offset="375" max-vertical-offset="30396">
+          <caret line="71" column="10" selection-start-line="71" selection-start-column="9" selection-end-line="71" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Android/sdk/sources/android-21/java/text/DateFormat.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33392859" vertical-offset="510" max-vertical-offset="13651">
+          <caret line="63" column="22" selection-start-line="63" selection-start-column="22" selection-end-line="63" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Android/sdk/sources/android-21/java/text/SimpleDateFormat.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5502742" vertical-offset="3541" max-vertical-offset="22797">
+          <caret line="254" column="22" selection-start-line="254" selection-start-column="14" selection-end-line="254" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/broadcastreceiver/ServiceBroadcastConstants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.27321428" vertical-offset="0" max-vertical-offset="560">
+          <caret line="9" column="69" selection-start-line="9" selection-start-column="69" selection-end-line="9" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/utils/ApplicationHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5967">
+          <caret line="23" column="116" selection-start-line="23" selection-start-column="116" selection-end-line="23" selection-end-column="116" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#11649#11650#0" expanded="true" />
+            <element signature="e#11689#11690#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/utils/HTTPResponseParser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="715" max-vertical-offset="2244">
+          <caret line="61" column="36" selection-start-line="61" selection-start-column="36" selection-end-line="61" selection-end-column="36" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1005#1006#0" expanded="true" />
+            <element signature="e#1042#1043#0" expanded="true" />
+            <element signature="e#1081#1082#0" expanded="true" />
+            <element signature="e#1119#1120#0" expanded="true" />
+            <element signature="e#1177#1178#0" expanded="true" />
+            <element signature="e#1221#1222#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/views/TrackerBeeMapsActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1969" max-vertical-offset="5508">
+          <caret line="155" column="56" selection-start-line="155" selection-start-column="56" selection-end-line="155" selection-end-column="56" />
+          <folding>
+            <element signature="e#5839#6395#0" expanded="true" />
+            <element signature="e#6388#6389#0" expanded="true" />
+            <element signature="e#6465#7241#0" expanded="true" />
+            <element signature="e#7234#7235#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/application/service/TrackerBeeService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.48392856" vertical-offset="1446" max-vertical-offset="3825">
-          <caret line="142" column="36" selection-start-line="142" selection-start-column="36" selection-end-line="142" selection-end-column="36" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="2924" max-vertical-offset="4080">
+          <caret line="219" column="54" selection-start-line="219" selection-start-column="54" selection-end-line="219" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trackertraced/trackerbee/locationmodule/manager/managerimpl/TrackerBeeLocationManagerImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33333334" vertical-offset="538" max-vertical-offset="3757">
+          <caret line="51" column="0" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
           <folding />
         </state>
       </provider>

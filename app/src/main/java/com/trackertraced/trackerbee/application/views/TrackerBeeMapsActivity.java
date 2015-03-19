@@ -31,6 +31,7 @@ import com.trackertraced.trackerbee.application.utils.ApplicationSharePreference
 import com.trackertraced.trackerbee.application.utils.ConstantsKeyValues;
 import com.trackertraced.trackerbee.application.utils.DeviceUuidFactory;
 import com.trackertraced.trackerbee.application.utils.LogHelper;
+import com.trackertraced.trackerbee.locationmodule.model.LocationModel;
 
 import java.util.ArrayList;
 
@@ -126,6 +127,22 @@ public class TrackerBeeMapsActivity
             moveToLocation(latLng);
         }
     };
+    private final BroadcastReceiver locationListBroadCastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ArrayList<LocationModel> locationModels = intent.getParcelableArrayListExtra(ServiceBroadcastConstants.TAG_LOCATION_LIST);
+//            logHelper.d("BroadcastReceiver() location: " + location.toString());
+            //addMarker(new LatLng(location.getLatitude(), location.getLongitude()));
+            for (LocationModel locationModel : locationModels) {
+                LatLng latLng = new LatLng(
+                        locationModel.getLocation().getLatitude(),
+                        locationModel.getLocation().getLongitude()
+                );
+                addPolyline(latLng);
+            }
+//            moveToLocation(latLng);
+        }
+    };
 
     @Override
     protected void onPause() {
@@ -136,6 +153,7 @@ public class TrackerBeeMapsActivity
                         .getServiceConnection()
         );
         unregisterReceiver(latestLocationBroadCastReceiver);
+        unregisterReceiver(locationListBroadCastReceiver);
     }
 
     @Override
@@ -150,6 +168,7 @@ public class TrackerBeeMapsActivity
                 Context.BIND_AUTO_CREATE
         );
         registerReceiver(latestLocationBroadCastReceiver, new IntentFilter(ServiceBroadcastConstants.BROADCAST_LATEST_LOCATION));
+        registerReceiver(locationListBroadCastReceiver, new IntentFilter(ServiceBroadcastConstants.BROADCAST_LOCATION_LIST));
 //        if(ApplicationSharePreferences.getDeviceId()!=null){
 //            bindService(intentTrackerBeeService,serviceMessengerManager.getServiceConnection(), Context.BIND_AUTO_CREATE);
 //            registerReceiver(latestLocationBroadCastReceiver,new IntentFilter(ServiceBroadcastConstants.BROADCAST_LATEST_LOCATION));

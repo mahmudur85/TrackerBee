@@ -15,6 +15,7 @@ import com.trackertraced.trackerbee.application.utils.ApplicationHelper;
 import com.trackertraced.trackerbee.application.utils.ApplicationSharePreferences;
 import com.trackertraced.trackerbee.application.utils.ConstantsKeyValues;
 import com.trackertraced.trackerbee.application.utils.DeviceUuidFactory;
+import com.trackertraced.trackerbee.application.utils.HTTPResponseParser;
 import com.trackertraced.trackerbee.application.utils.LogHelper;
 import com.trackertraced.trackerbee.application.utils.httpRequest.HTTPParams;
 import com.trackertraced.trackerbee.application.utils.httpRequest.HTTPPostAsync;
@@ -210,6 +211,21 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync, OnL
     @Override
     public void HTTPResponse(String response, HTTPResponseCode.ResponseCode responseCode) {
         logHelper.d("response: " + response);
+        HTTPResponseParser httpResponseParser = new HTTPResponseParser(response);
+        HTTPResponseParser.RESPONSE_TYPE response_type = httpResponseParser.getResponseType();
+        logHelper.d("response_type: " + response_type.getString());
+        switch (response_type) {
+            case SUCCESS:
+                ArrayList<LocationModel> locationModels = httpResponseParser.getLocationModels();
+                broadcastLocationList(locationModels);
+                logHelper.d("locationModels: " + locationModels);
+                break;
+            case ERROR:
+            case NOT_JSON:
+            case NULL:
+                break;
+
+        }
         mHTTPPostAsync.delegate = null;
     }
 

@@ -1,10 +1,18 @@
 package com.trackertraced.trackerbee.application.utils;
 
-import java.text.DateFormat;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.text.format.DateFormat;
+
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import java.util.TimeZone;
 
 /**
@@ -13,7 +21,7 @@ import java.util.TimeZone;
  * see http://www.coderanch.com/t/416639/java/java/Convert-Local-time-UTC-vice
  */
 public final class ApplicationHelper {
-    static LogHelper logHelper = new LogHelper(LogHelper.LogTags.KMR, ApplicationHelper.class.getSimpleName(), true);
+    static LogHelper logHelper = new LogHelper(LogHelper.LogTags.KMR, ApplicationHelper.class.getSimpleName(), false);
 
     private static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
@@ -193,10 +201,9 @@ public final class ApplicationHelper {
      * Method to get Yesterday Date
      */
     public static String getYesterdayDateString() {
-        DateFormat dateFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -1);
-        return getDateOnly(dateFormat.format(cal.getTime()));
+        Date yesterday = new Date(System.currentTimeMillis() - (1000 * 60 * 60 * 24));
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_TIME_FORMAT);
+        return getDateOnly(sdf.format(yesterday));
     }
 
     public static boolean isEmptyOrNull(String value) {
@@ -205,5 +212,134 @@ public final class ApplicationHelper {
         } else {
             return true;
         }
+    }
+
+    /**
+     * Method to Convert Drawable to Bitmap Image
+     *
+     * @param drawable
+     * @return Bitmap
+     */
+    public static Bitmap drawableToBitmap(Drawable drawable) {
+        if (drawable instanceof BitmapDrawable)
+            return ((BitmapDrawable) drawable).getBitmap();
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
+    }
+
+    public static boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        // only got here if we didn't return false
+        return true;
+    }
+
+    public static boolean isPhoneNumber(String s) {
+        if (s.length() > 0 && s.length() <= 15) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Method to Convert Bitmap Image to Drawable
+     *
+     * @param resources
+     * @param bitmap
+     * @return Drawable
+     */
+    public static Drawable bitmapToDrawable(Resources resources, Bitmap bitmap) {
+        BitmapDrawable bitmapDrawable = new BitmapDrawable(resources, bitmap);
+        return bitmapDrawable.getCurrent();
+    }
+
+    /**
+     * Method to Convert Timestamp to 00HR:00MIN:00SEC Format
+     *
+     * @param timestamp
+     * @return String
+     */
+    public static String getDurationTimeStampFormat(long timestamp) {
+        String timeFormat = "";
+        int hr = (int) Math.floor(timestamp / 3600);
+        int min = (int) Math.floor((timestamp % 3600) / 60);
+        int ss = (int) Math.floor((timestamp % 3600) % 60);
+        String preTimeH = "0";
+        String preTimeM = "0";
+        String preTimeS = "0";
+        String hrStr = ":";
+        String minStr = ":";
+        String ssStr = "";
+        if (hr >= 10)
+            preTimeH = "";
+        if (min >= 10)
+            preTimeM = "";
+        if (ss >= 10)
+            preTimeS = "";
+        timeFormat = preTimeM + min + minStr + preTimeS + ss + ssStr;
+        if (hr > 0)
+            timeFormat = preTimeH + hr + hrStr + preTimeM + min + minStr + preTimeS + ss + ssStr;
+        return timeFormat;
+    }
+
+    /**
+     * Method to Convert Timestamp to DateTime String
+     *
+     * @param timestamp
+     * @return String
+     */
+    public static String getTimeStampString(long timestamp) {
+        Date dateObj = new Date();
+        dateObj.setTime(timestamp * 1000);
+        return DateFormat.format(DATE_TIME_FORMAT, dateObj).toString();
+    }
+
+    /**
+     * Method to Find Day Difference with Today
+     *
+     * @param timestamp
+     * @return Integer Day difference
+     */
+    public static int getDayDifferenceWithToday(long timestamp) {
+        logHelper.d("Current => " + System.nanoTime());
+        Date fetchedDate = new Date();
+        fetchedDate.setTime(timestamp * 1000);
+        logHelper.d("Fetched Date => " + fetchedDate);
+        Date currentDate = new Date();
+        currentDate.setTime(System.currentTimeMillis());
+        logHelper.d("Current Date => " + currentDate);
+        long diffInMillis = currentDate.getTime() - fetchedDate.getTime();
+        logHelper.d("Difference In Milliseconds => " + diffInMillis);
+        logHelper.d("Day Difference => " + TimeUnit.MILLISECONDS.toDays(diffInMillis));
+        return (int) TimeUnit.MILLISECONDS.toDays(diffInMillis);
+    }
+
+    /**
+     * Method to Convert Java Timestamp to UNIX Timestamp
+     *
+     * @param timestamp
+     * @return Integer Day difference
+     */
+    public static long getJavaToUnixTimestamp(long timestamp) {
+        return timestamp / 1000L;
+    }
+
+    /**
+     * Method to Convert DateTime String to UnixTimeStamp
+     *
+     * @param localTime - DataTime String
+     * @return Long
+     */
+    public static long getDateTimeToUnixTimestamp(String localTime) throws ParseException {
+        TimeZone localTimeZone = TimeZone.getDefault();
+        SimpleDateFormat parser = new SimpleDateFormat(DATE_TIME_FORMAT);
+        parser.setTimeZone(localTimeZone);
+        return getJavaToUnixTimestamp(parser.parse(localTime).getTime());
     }
 }
