@@ -8,6 +8,9 @@ import android.graphics.Color;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -41,17 +44,17 @@ public class TrackerBeeMapsActivity
         extends FragmentActivity
         implements OnMapClickListener,
         OnMapLongClickListener,
-        GoogleMap.OnMapLoadedCallback {
+        GoogleMap.OnMapLoadedCallback,
+        GoogleMap.OnMyLocationButtonClickListener {
     // http://internet.com/mobile/developing-with-google-maps-v2-for-android/
     LogHelper logHelper = new LogHelper(LogHelper.LogTags.KMR, TrackerBeeMapsActivity.class.getSimpleName(), true);
-    TextView textViewDeviceId;
+
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    private UiSettings uiSettingsMap;
-//    private ServiceMessengerManager serviceMessengerManager = new ServiceMessengerManagerImpl();
 
-    //Intent intentTrackerBeeService;
+    EditText editTextDeviceId;
+    Button buttonStart;
 
-//    EditText editTextDeviceId;
+    private static boolean serviceInitState = false;
 
     boolean firstLoad;
 
@@ -70,34 +73,34 @@ public class TrackerBeeMapsActivity
         ApplicationSharePreferences applicationSharePreferences = new ApplicationSharePreferences(getBaseContext());
 
         DeviceUuidFactory deviceUuidFactory = new DeviceUuidFactory(getBaseContext());
-        ApplicationSharePreferences.setDeviceId(deviceUuidFactory.getDeviceUuid().toString());
-        textViewDeviceId = (TextView) findViewById(R.id.tv_device_id);
-        textViewDeviceId.setText(deviceUuidFactory.getDeviceUuid().toString());
-        setUpMapIfNeeded();
+//        ApplicationSharePreferences.setDeviceId(deviceUuidFactory.getDeviceUuid().toString());
 
-//        editTextDeviceId = (EditText) findViewById(R.id.device_id);
-//        buttonStart = (Button) findViewById(R.id.button_start);
-//        buttonStart.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String deviceId = editTextDeviceId.getText().toString();
-//                if(buttonStart.getText().equals("Stop")){
-//                    buttonStart.setText("Start");
-//                    Intent intentTrackerBeeService = new Intent(ApplicationConstants.getContext(), TrackerBeeService.class);
-//                    stopService(intentTrackerBeeService);
-//                }else{
-//                    if(deviceId != null || deviceId != "" || deviceId.length() != 0){
-//                        ApplicationSharePreferences.setDeviceId(deviceId);
-//                        Intent intentTrackerBeeService = new Intent(ApplicationConstants.getContext(), TrackerBeeService.class);
-//                        startService(intentTrackerBeeService);
-//                        bindService(intentTrackerBeeService,serviceMessengerManager.getServiceConnection(), Context.BIND_AUTO_CREATE);
-//                        registerReceiver(latestLocationBroadCastReceiver,new IntentFilter(ServiceBroadcastConstants.BROADCAST_LATEST_LOCATION));
-//                        buttonStart.setText("Stop");
-//                    }
-//                }
-//            }
-//        });
-//        logHelper.d("onCreate()");
+        serviceInitState = false;
+
+        editTextDeviceId = (EditText) findViewById(R.id.device_id);
+        buttonStart = (Button) findViewById(R.id.button_start);
+        buttonStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String deviceId = editTextDeviceId.getText().toString();
+                if (buttonStart.getText().equals("Stop")) {
+                    logHelper.d("Stop");
+                    buttonStart.setText("Start");
+                    serviceInitState = false;
+                    stopService();
+                } else {
+                    if (deviceId != null && !deviceId.isEmpty()) {
+                        ApplicationSharePreferences.setDeviceId(deviceId);
+                        logHelper.d("Start");
+                        buttonStart.setText("Stop");
+                        serviceInitState = true;
+                        initService();
+                    }
+                }
+            }
+        });
+        setUpMapIfNeeded();
+        logHelper.d("onCreate");
     }
 
     private final BroadcastReceiver latestLocationBroadCastReceiver = new BroadcastReceiver() {
@@ -111,6 +114,7 @@ public class TrackerBeeMapsActivity
             moveToLocation(latLng);
         }
     };
+
     private final BroadcastReceiver locationListBroadCastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -130,41 +134,63 @@ public class TrackerBeeMapsActivity
         }
     };
 
-    @Override
-    protected void onPause() {
-        super.onPause();
+    private void initService() {
+        if (serviceInitState) {
+            Intent intentTrackerBeeService = new Intent(ApplicationConstants.getContext(), TrackerBeeService.class);
+            startService(intentTrackerBeeService);
+            bindService(intentTrackerBeeService,
+                    ApplicationConstants
+                            .getServiceMessengerManager()
+                            .getServiceConnection(),
+                    Context.BIND_AUTO_CREATE
+            );
+        }
+//        registerReceiver(latestLocationBroadCastReceiver, new IntentFilter(ServiceBroadcastConstants.BROADCAST_LATEST_LOCATION));
+        registerReceiver(locationListBroadCastReceiver, new IntentFilter(ServiceBroadcastConstants.BROADCAST_LOCATION_LIST));
+    }
+
+    private void deInitService() {
+        if (serviceInitState) {
+            unbindService(
+                    ApplicationConstants
+                            .getServiceMessengerManager()
+                            .getServiceConnection()
+            );
+//            unregisterReceiver(latestLocationBroadCastReceiver);
+            unregisterReceiver(locationListBroadCastReceiver);
+        }
+    }
+
+    private void stopService() {
         unbindService(
                 ApplicationConstants
                         .getServiceMessengerManager()
                         .getServiceConnection()
         );
-//        unregisterReceiver(latestLocationBroadCastReceiver);
+//            unregisterReceiver(latestLocationBroadCastReceiver);
         unregisterReceiver(locationListBroadCastReceiver);
+        Intent intentTrackerBeeService = new Intent(ApplicationConstants.getContext(), TrackerBeeService.class);
+        startService(intentTrackerBeeService);
+    }
+
+    @Override
+    protected void onPause() {
+//        logHelper.d("onPause");
+        super.onPause();
+        deInitService();
     }
 
     @Override
     protected void onResume() {
+//        logHelper.d("onResume");
         super.onResume();
-        Intent intentTrackerBeeService = new Intent(ApplicationConstants.getContext(), TrackerBeeService.class);
-        startService(intentTrackerBeeService);
-        bindService(intentTrackerBeeService,
-                ApplicationConstants
-                        .getServiceMessengerManager()
-                        .getServiceConnection(),
-                Context.BIND_AUTO_CREATE
-        );
-//        registerReceiver(latestLocationBroadCastReceiver, new IntentFilter(ServiceBroadcastConstants.BROADCAST_LATEST_LOCATION));
-        registerReceiver(locationListBroadCastReceiver, new IntentFilter(ServiceBroadcastConstants.BROADCAST_LOCATION_LIST));
-//        if(ApplicationSharePreferences.getDeviceId()!=null){
-//            bindService(intentTrackerBeeService,serviceMessengerManager.getServiceConnection(), Context.BIND_AUTO_CREATE);
-//            registerReceiver(latestLocationBroadCastReceiver,new IntentFilter(ServiceBroadcastConstants.BROADCAST_LATEST_LOCATION));
-//            buttonStart.setText("Stop");
-//        }
+        initService();
         setUpMapIfNeeded();
     }
 
     @Override
     public void onDestroy() {
+//        logHelper.d("onDestroy");
         super.onDestroy();
         firstLoad = false;
     }
@@ -192,8 +218,9 @@ public class TrackerBeeMapsActivity
                     .getMap();
         }
         arrayPoints = new ArrayList<LatLng>();
-        mMap.setMyLocationEnabled(true);
+//        mMap.setMyLocationEnabled(true);
         // mMap.setOnMapClickListener(this);
+//        mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnMapLongClickListener(this);
         mMap.setOnMapLoadedCallback(this);
     }
@@ -327,12 +354,19 @@ public class TrackerBeeMapsActivity
 
     @Override
     public void onMapLoaded() {
-        if (!firstLoad) {
-            firstLoad = true;
-            this.requestInstanceLog(
-                    ApplicationHelper.getYesterdayDateString()
-            );
+        if (serviceInitState) {
+            if (!firstLoad) {
+                firstLoad = true;
+                this.requestInstanceLog(
+                        ApplicationHelper.getYesterdayDateString()
+                );
+            }
         }
+    }
+
+    @Override
+    public boolean onMyLocationButtonClick() {
+        return false;
     }
 
     //TODO:

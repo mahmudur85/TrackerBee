@@ -89,6 +89,8 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync, OnL
         } catch (Exception e) {
             logHelper.e("scheduleAtFixedRate", e);
         }
+
+        requestGetInstance(0, "", ApplicationHelper.getYesterdayDateString());
         return START_REDELIVER_INTENT;
 //        return START_STICKY;
     }
@@ -195,9 +197,11 @@ public class TrackerBeeService extends Service implements HTTPResponseAsync, OnL
         super.onDestroy();
         try {
             locationScheduledTaskExecutor.shutdown();
+            locationScheduledTaskExecutor = null;
             trackerBeeLocationManager.stopLocationUpdate();
+            trackerBeeLocationManager = null;
         } catch (Exception e) {
-            e.printStackTrace();
+            logHelper.e("onDestroy Exception: ", e);
         }
     }
 

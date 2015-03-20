@@ -8,8 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:orientation="horizontal"
-        android:visibility="gone">
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/device_id"
@@ -31,15 +30,6 @@
             android:layout_alignParentEnd="true"
             android:text="Start" />
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/tv_device_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:text="Device Id"
-        android:layout_above="@+id/map" />
 
 
     <fragment
