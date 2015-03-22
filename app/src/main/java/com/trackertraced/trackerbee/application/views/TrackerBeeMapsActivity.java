@@ -18,6 +18,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -61,6 +63,7 @@ public class TrackerBeeMapsActivity
     Marker marker;
     private ArrayList<LatLng> arrayPoints = null;
     Polyline polyline;
+    Circle circle;
     PolylineOptions polylineOptions;
 
     @Override
@@ -121,16 +124,21 @@ public class TrackerBeeMapsActivity
             ArrayList<LocationModel> locationModels = intent.getParcelableArrayListExtra(ServiceBroadcastConstants.TAG_LOCATION_LIST);
             logHelper.d("location: " + locationModels);
             //addMarker(new LatLng(location.getLatitude(), location.getLongitude()));
-            removePolyline();
-            clearMap();
+            removeCircle();
+            ArrayList<LatLng> latLngs = new ArrayList<>();
             for (LocationModel locationModel : locationModels) {
                 LatLng latLng = new LatLng(
                         locationModel.getLocation().getLatitude(),
                         locationModel.getLocation().getLongitude()
                 );
-                addPolyline(latLng);
+//                addCircle(latLng,locationModel.getLocation().getAccuracy());
+                addCircle(latLng, 100f);
+//                latLngs.add(latLng);
                 moveToLocation(latLng);
             }
+//            removePolyline();
+//            clearMap();
+//            addPolyline(latLngs);
         }
     };
 
@@ -263,6 +271,7 @@ public class TrackerBeeMapsActivity
 
     private void addPolyline(LatLng position) {
         arrayPoints.add(position);
+        this.removePolyline();
         addPolyline(arrayPoints);
     }
 
@@ -275,6 +284,23 @@ public class TrackerBeeMapsActivity
     private void clearMap() {
         mMap.clear();
         arrayPoints.clear();
+    }
+
+    private void addCircle(LatLng latLng, double accuracy) {
+        CircleOptions circleOptions = new CircleOptions()
+                .center(latLng)
+                .radius(accuracy)// In meters
+                .strokeColor(Color.BLUE)
+                .strokeWidth(5);
+
+        // Get back the mutable Circle
+        circle = mMap.addCircle(circleOptions);
+    }
+
+    private void removeCircle() {
+        if (null != circle) {
+            circle.remove();
+        }
     }
 
     @Override
